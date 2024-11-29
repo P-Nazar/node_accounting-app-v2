@@ -1,11 +1,10 @@
 const { v4: uuidv4 } = require('uuid');
 
-let users = [
-  {
-    id: '7',
-    name: 'Nazar',
-  },
-];
+let users = [];
+
+const resetUsers = () => {
+  users = [];
+};
 
 const getAll = () => {
   return users;
@@ -48,4 +47,5 @@ module.exports = {
   remove,
   update,
   create,
+  resetUsers,
 };

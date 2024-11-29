@@ -1,6 +1,7 @@
-const userService = require('../services/user.services.js');
+const userService = require('../services/user.service.js');
 
 const get = (_req, res) => {
+  res.sendStatus(200);
   res.send(userService.getAll());
 };
 
@@ -22,7 +23,7 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(422);
+    res.sendStatus(400);
   }
 
   const newUser = userService.create(name);
@@ -63,7 +64,9 @@ const update = (req, res) => {
     return;
   }
 
-  res.send(user);
+  const updatedUser = userService.update({ id, name });
+
+  res.send(updatedUser);
 };
 
 module.exports = {
