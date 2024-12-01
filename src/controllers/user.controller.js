@@ -1,14 +1,13 @@
 const userService = require('../services/user.service.js');
 
 const get = (_req, res) => {
-  res.sendStatus(200);
-  res.send(userService.getAll());
+  res.status(200).send(userService.getAll());
 };
 
 const getById = (req, res) => {
   const { id } = req.params;
 
-  const user = userService.getById(id);
+  const user = userService.getById(+id);
 
   if (!user) {
     res.sendStatus(404);
@@ -23,18 +22,25 @@ const create = (req, res) => {
   const { name } = req.body;
 
   if (!name) {
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 
   const newUser = userService.create(name);
 
-  res.statusCode = 201;
+  // res.statusCode = 201;
 
-  res.send(newUser);
+  // res.send(newUser);
+  res.status(201).send(newUser);
 };
 
 const remove = (req, res) => {
   const { id } = req.params;
+
+  if (!id) {
+    res.sendStatus(200);
+
+    return;
+  }
 
   if (!userService.getById(id)) {
     res.sendStatus(404);
@@ -42,7 +48,7 @@ const remove = (req, res) => {
     return;
   }
 
-  userService.remove(id);
+  userService.remove(+id);
 
   res.sendStatus(204);
 };
@@ -50,7 +56,7 @@ const remove = (req, res) => {
 const update = (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const user = userService.getById(id);
+  const user = userService.getById(+id);
 
   if (!user) {
     res.sendStatus(404);

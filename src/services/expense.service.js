@@ -1,29 +1,59 @@
-const { v4: uuidv4 } = require('uuid');
-
 let expenses = [];
+let nextId = 1;
 
 const resetExpenses = () => {
   expenses = [];
+  nextId = 1;
 };
 
-const getAll = () => {
-  return expenses;
+const getAll = (category, userId, from, to) => {
+  let filteredExpenses = [...expenses];
+
+  if (category) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => expense.category.toLowerCase() === category.toLowerCase(),
+    );
+  }
+
+  if (userId) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => expense.userId === +userId,
+    );
+  }
+
+  if (from) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => new Date(expense.spentAt) >= new Date(from),
+    );
+  }
+
+  if (to) {
+    filteredExpenses = filteredExpenses.filter(
+      (expense) => new Date(expense.spentAt) <= new Date(to),
+    );
+  }
+
+  return filteredExpenses;
 };
 
 const getById = (id) => {
-  return expenses.find((expense) => expense.id === id) || null;
+  const expenseId = Number(id);
+
+  return expenses.find((expense) => expense.id === expenseId) || null;
 };
 
-const create = ({ userId, title, amount, category, note }) => {
+const create = ({ userId, title, amount, category, note, spentAt }) => {
   const newExpense = {
-    id: uuidv4(),
+    id: nextId,
     userId,
-    spentAt: new Date(),
+    spentAt,
     title,
     amount,
     category,
     note,
   };
+
+  nextId++;
 
   expenses.push(newExpense);
 
@@ -39,7 +69,7 @@ const remove = (id) => {
 };
 
 const update = ({ id, data }) => {
-  const expense = expenses.find((item) => item.id === id);
+  const expense = getById(id);
 
   const newExpense = {
     ...expense,

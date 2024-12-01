@@ -1,9 +1,9 @@
-const { v4: uuidv4 } = require('uuid');
-
 let users = [];
+let nextId = 1;
 
 const resetUsers = () => {
   users = [];
+  nextId = 1;
 };
 
 const getAll = () => {
@@ -11,14 +11,18 @@ const getAll = () => {
 };
 
 const getById = (id) => {
-  return users.find((person) => person.id === id) || null;
+  const userId = Number(id);
+
+  return users.find((person) => person.id === userId) || null;
 };
 
 const create = (name) => {
   const newUser = {
-    id: uuidv4(),
+    id: nextId,
     name,
   };
+
+  nextId++;
 
   users.push(newUser);
 
